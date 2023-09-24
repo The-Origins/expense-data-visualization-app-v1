@@ -1,0 +1,8 @@
+### Simple expense data visualization app
+This app allows you to visualize data with percentages.
+
+### Follow steps to get started
+    - Download Node.js https://nodejs.org.
+    - Create a .xlsx file in this directory e.g 'expenses.xlsx'.
+    - Run npm install to download dependancies.
+    - Run npm start ->
