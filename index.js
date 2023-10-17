@@ -6,6 +6,8 @@
 //import xlsx
 const XLSX = require("xlsx");
 
+const fs = require("fs")
+
 //create workbook from your .xlsx file
 //cell dates is so that dates for all the entries are in js date format
 const workbook = XLSX.readFile(
@@ -15,17 +17,22 @@ const workbook = XLSX.readFile(
 
 let data = [];
 
+//loop through all worksheets
 workbook.SheetNames.forEach((name) => {
   let ws = workbook.Sheets[name];
+  //convert sheet data to json format using 'sheet to json'
   data = [...data, ...XLSX.utils.sheet_to_json(ws)];
 });
 
-//convert sheet data to json format using 'sheet to json'
+
 
 //import utils
 const utils = require("./utils");
 
-//total for all expenses
+//total for all expenses it includes an absolute property for the total of all expenses 
+//then includes additional properties for each worksheet total
+//worksheets should be divided by month
+
 let total = {};
 
 //loop through the data and change it to the desired format
@@ -58,4 +65,9 @@ data.forEach((element) => {
 
 data.total = total;
 
-console.log(utils.findDatePercentage(data));
+//writes output into a .json file 
+
+fs.writeFile("output.json", JSON.stringify(utils.findExpensePercentage(data), null, 4), (err) => {
+  if(err) console.error(err)
+  console.log("done")
+})
