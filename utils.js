@@ -43,9 +43,9 @@ module.exports.findExpensePercentage = (data) => {
           : results[elementMY][element.Expense][element.variant].amount;
       results[elementMY][element.Expense][element.variant].entries =
         !results[elementMY][element.Expense][element.variant].entries &&
-        results[elementMY][element.Expense][element.variant].amount != 0
+        results[elementMY][element.Expense][element.variant].entries != 0
           ? 0
-          : results[elementMY][element.Expense][element.variant].amount;
+          : results[elementMY][element.Expense][element.variant].entries;
 
       results[elementMY][element.Expense][element.variant].amount +=
         element.Amount;
