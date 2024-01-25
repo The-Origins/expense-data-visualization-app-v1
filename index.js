@@ -59,15 +59,18 @@ data.forEach((element) => {
     );
   }
   element.Expense = String(element.Expense).toLocaleLowerCase();
+  element.Ref = String(element.Ref).split(",")
+
   total.absolute += element.Amount;
   total[elementMY] += element.Amount;
 });
 
 data.total = total;
 
+
 //writes output into a .json file 
 
-fs.writeFile("output.json", JSON.stringify(utils.findExpensePercentage(data), null, 4), (err) => {
+fs.writeFile("output.json", JSON.stringify(utils.findWeekPercentage(data), null, 4), (err) => {
   if(err) console.error(err)
   console.log("done")
 })

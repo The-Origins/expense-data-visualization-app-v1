@@ -178,5 +178,96 @@ module.exports.findDatePercentage = (data) => {
     }
   });
 
-  return results['Tue Oct 03 2023'];
+  return results;
 };
+
+module.exports.findWeekPercentage = (data) =>
+{
+  let results = {}
+  let prevDay = 0
+  data.forEach((element) =>
+  {
+    let weekDay = element.Date.getDay()
+    let weekStart = new Date(element.Date.getFullYear(), element.Date.getMonth(),(element.Date.getDate() - weekDay))
+    let weekEnd = new Date(element.Date.getFullYear(), element.Date.getMonth(), ((element.Date.getDate() - weekDay) + 6))
+    let week = weekStart.toDateString() + " - " + weekEnd.toDateString()
+
+    results.total = results.total || 0
+    results.total += element.Amount
+
+    results[week] = results[week] || {}
+
+    results[week].total = results[week].total || 0
+    results[week].total += element.Amount
+
+    results[week].weekStart = weekStart
+    results[week].weekEnd = weekEnd
+
+
+    results[week][element.Expense] =
+      results[week][element.Expense] || {};
+    results[week][element.Expense].amount =
+      !results[week][element.Expense].amount &&
+      results[week][element.Expense].amount != 0
+        ? 0
+        : results[week][element.Expense].amount;
+
+    results[week][element.Expense].amount +=
+      element.Amount;
+    results[week][element.Expense].percent = `${(
+      (results[week][element.Expense].amount /
+        results[week].total) *
+      100
+    ).toFixed(1)}%`;
+
+    if (element.variant) {
+      results[week][element.Expense][element.variant] =
+        results[week][element.Expense][
+          element.variant
+        ] || {};
+
+      results[week][element.Expense][
+        element.variant
+      ].percent =
+        results[week][element.Expense][element.variant]
+          .percent || {};
+
+      results[week][element.Expense][
+        element.variant
+      ].amount =
+        !results[week][element.Expense][element.variant]
+          .amount &&
+        results[week][element.Expense][element.variant]
+          .amount != 0
+          ? 0
+          : results[week][element.Expense][
+              element.variant
+            ].amount;
+
+      results[week][element.Expense][
+        element.variant
+      ].amount += element.Amount;
+      results[week][element.Expense][
+        element.variant
+      ].percent.relative = `${(
+        (results[week][element.Expense][element.variant]
+          .amount /
+          results[week][element.Expense].amount) *
+        100
+      ).toFixed(1)}%`;
+      results[week][element.Expense][
+        element.variant
+      ].percent.absolute = `${(
+        (results[week][element.Expense][element.variant]
+          .amount /
+          results[week].total) *
+        100
+      ).toFixed(1)}%`;
+    }
+
+    
+  });
+
+  results.average = Number((results.total / (Object.keys(results).length - 4)).toFixed(2))
+  return results
+}
